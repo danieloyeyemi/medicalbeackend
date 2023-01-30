@@ -6,5 +6,6 @@ router.get('/',userController.LandingPage)
 router.post('/signup',userController.Signup)
 router.post('/signup',doctorController.Signup)
 router.post('/login',userController.Login)
+router.get('/dashboard',userController.userDetails)
 // router.post('/login',doctorController.Login)
 module.exports=router

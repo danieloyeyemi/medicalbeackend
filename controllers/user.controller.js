@@ -36,17 +36,7 @@ const Signup = (req, res) => {
                     }
 
                 })
-                // const form = new userModel(newUser)
-                // form.save((err, result) => {
-                //     if (err) {
-                //         console.log(err)
-                //         console.log(`error`)
-                //         res.send({ message: "user signup failed, please try again later", status: false })
-                //     }
-                //     else {
-                //         res.send({ message: "registration successful", status: true })
-                //     }
-                // })
+                
 
             }
 
@@ -75,7 +65,7 @@ const Login = (req, res) => {
                         console.log(`error dey`)
                     } else {
                         if (same) {
-                            const token = jwt.sign({ email }, SECRET, { expiresIn: '1h' })
+                            const token = jwt.sign({ email }, SECRET, { expiresIn: 3600 })
                             console.log(token)
                             res.send({ message: 'correct password', status: true, token })
                         } else {
@@ -87,39 +77,17 @@ const Login = (req, res) => {
         }
     })
 }
-// const Login = (req, res) => {
-//     const logUser = req.body;
-//     console.log(req.body)
-//     const email = req.body.email
-//     const password = req.body.password
-//     userModel.findOne({ email: email }, (err, user) => {
-//         if (err) {
-//             res.send({ message: 'server error', status: false })
-//         }
-//         else {
-//             if (!user) {
-//                 res.send({ message: 'unrecognized email', staus: false })
-//             }
-//             else {
-//                 user.validatePassword(password, (err, same) => {
-//                     if (err) {
-//                         console.log(`an error occured`)
-//                     }
-//                     else {
-//                         if (same) {
-//                             const token = jwt.sign({ email }, SECRET, { expiresIn: '12h' })
-//                             console.log(token)
-//                             res.send({ message: 'correct password', status: true, token })
-//                         }
-//                         else {
-//                             res.send({ message: 'invalid password', status: false })
-//                         }
 
-//                         // console.log(same)
-//                     }
-//                 })
-//             }
-//         }
-//     })
-// }
-module.exports = { LandingPage, Signup, Login }
+
+const userDetails = (req,res) => {
+    const token = req.headers.authorization.split(' ')[1]
+    jwt.verify(token,SECRET, async(err,result) => {
+        if (err) {
+            console.log(err);
+        }else{
+            const user = await userModel.findOne({email:result.email})
+           res.send({status:true, user})
+        }
+    })
+}
+module.exports = { LandingPage, Signup, Login, userDetails }
